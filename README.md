@@ -113,7 +113,7 @@ All keys are optional; the defaults are what most people want.
     watch: true                    # rescan when files change
     logAdaptations: true           # log each skill every time the catalog is rebuilt
     store: ~/.dsh/skill-forge      # where the Skills page imports into
-    ui: true                       # serve Settings > Skills and its bridge
+    ui: true                       # serve the Skills page and its bridge
 ```
 
 With `autoDiscover`, each project you open contributes whatever it already has under
@@ -130,14 +130,22 @@ through `600` (bundled skills). Forged skills start at `620`, so importing a
 
 ## The Skills page
 
-With the web profile there is a **Settings → Skills** section that does what the CLI
-does without a terminal:
+With the web profile there is a **Skills** entry in the sidebar — and the same panel
+at **Settings → Skills** — that does what the CLI does without a terminal:
 
 - lists every skill in the store with its dialect, whether the model may invoke it,
   and the file it came from;
 - imports a local path or a git URL, with a **Preview** button that shows what the
   source would contribute before anything is copied;
 - removes a skill, after a second click to confirm.
+
+The sidebar entry and the settings section are two registrations over one component,
+so they never disagree about what is in the store. A destination in the DSH sidebar
+is exactly two slot registrations sharing one id: a `sidebar.panellist` row (the
+shell paints the button, label and active state; the plugin supplies only the glyph)
+and a `main` entry keyed by that same id, which the frame renders when the row is
+clicked. The glyph is drawn inline because `client/index.js` may require nothing but
+React.
 
 The page is a client module (`client/index.js`, declared as `dsh.client` in
 `package.json`) and it never touches the filesystem: it calls five JSON routes under

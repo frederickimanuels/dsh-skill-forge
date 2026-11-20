@@ -252,6 +252,22 @@ test('the package declares a browser half the harness can load', async () => {
   assert.match(bundle, /exports\.inject = inject/);
   assert.match(bundle, /settings\.section/);
   assert.match(bundle, new RegExp('api/dsh-skill-forge'));
+  // A sidebar destination is two registrations that share one id: the
+  // 'sidebar.panellist' row the shell paints and the 'main' panel it opens.
+  // Losing either one leaves a clickable row that navigates nowhere, or a page
+  // no row can reach, so both are pinned here.
+  assert.match(bundle, /name: "sidebar\.panellist"/);
+  assert.match(bundle, /name: "main",\s*\n\s*key: PANEL_ID/);
+  assert.match(bundle, /var PANEL_ID = "skill-forge";/);
+  // The sidebar registrant renders ONLY the glyph: the shell owns the button,
+  // the label and the active state. A component that returns chrome would
+  // double up on the row, so the icon must be a bare svg.
+  assert.match(bundle, /function SkillsPanelIcon/);
+  assert.match(bundle, /el\(\s*\n\s*"svg",/);
+  // The page owns its own scroll container: a 'main' entry fills the centre
+  // column and the shell paints no scroll chrome around it.
+  assert.match(bundle, /className: "sf-page"/);
+  assert.match(bundle, /className: "sf-pageScroll"/);
   // Only the modules the harness seeds are required: anything else would have
   // to be declared in dsh.client.external, and nothing is.
   const required = [...bundle.matchAll(/require\("([^"]+)"\)/g)].map((match) => match[1]);

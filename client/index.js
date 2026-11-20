@@ -31,7 +31,7 @@ window.__ModuleLoader__.load({
     var useRef = React.useRef;
     var useState = React.useState;
 
-    var css = ".sf-section{display:flex;flex-direction:column;gap:18px;max-width:820px}\n.sf-head{display:flex;flex-direction:column;gap:6px}\n.sf-title{font-size:16px;font-weight:600;color:var(--dsw-alias-label-primary)}\n.sf-sub{font-size:12px;line-height:1.5;color:var(--dsw-alias-label-tertiary)}\n.sf-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dsw-alias-label-tertiary)}\n.sf-meta code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--dsw-alias-label-secondary)}\n.sf-card{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}\n.sf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}\n.sf-row-end{justify-content:flex-end}\n.sf-input{flex:1 1 260px;min-width:0;padding:7px 10px;font-size:13px;color:var(--dsw-alias-label-primary);background:transparent;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;font-family:inherit}\n.sf-input:focus{outline:none;border-color:var(--dsw-alias-state-business-primary);box-shadow:0 0 0 var(--dsw-focus-ring-width) var(--dsw-focus-ring-color)}\n.sf-btn{appearance:none;border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;font-family:inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}\n.sf-btn:hover:not(:disabled){border-color:var(--dsw-alias-state-business-primary);color:var(--dsw-alias-state-business-primary)}\n.sf-btn:disabled{opacity:.5;cursor:default}\n.sf-btn-primary{border-color:var(--dsw-alias-state-business-primary);color:var(--dsw-alias-state-business-primary)}\n.sf-list{display:flex;flex-direction:column;gap:8px}\n.sf-skill{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}\n.sf-skill-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}\n.sf-name{font-size:13px;font-weight:600;color:var(--dsw-alias-label-primary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}\n.sf-dialect{font-size:11px;color:var(--dsw-alias-label-tertiary);border:1px solid var(--dsw-alias-border-l2);border-radius:999px;padding:1px 8px;white-space:nowrap}\n.sf-desc{font-size:12px;line-height:1.55;color:var(--dsw-alias-label-tertiary)}\n.sf-path{font-size:11px;color:var(--dsw-alias-label-tertiary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}\n.sf-warn{font-size:11px;color:var(--dsw-alias-state-warn-primary,var(--dsw-alias-label-secondary))}\n.sf-empty{font-size:12px;color:var(--dsw-alias-label-tertiary);padding:14px 0;text-align:center}\n.sf-error{font-size:12px;line-height:1.5;color:var(--dsw-alias-state-error-primary,#d33);word-break:break-word}\n.sf-notice{font-size:12px;line-height:1.5;color:var(--dsw-alias-state-business-primary)}\n.sf-hint{font-size:11px;line-height:1.5;color:var(--dsw-alias-label-tertiary)}\n.sf-spacer{flex:1}\n.sf-listitem{font-size:12px;color:var(--dsw-alias-label-secondary)}";
+    var css = ".sf-section{display:flex;flex-direction:column;gap:18px;max-width:820px}\n.sf-head{display:flex;flex-direction:column;gap:6px}\n.sf-title{font-size:16px;font-weight:600;color:var(--dsw-alias-label-primary)}\n.sf-sub{font-size:12px;line-height:1.5;color:var(--dsw-alias-label-tertiary)}\n.sf-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dsw-alias-label-tertiary)}\n.sf-meta code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--dsw-alias-label-secondary)}\n.sf-card{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}\n.sf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}\n.sf-row-end{justify-content:flex-end}\n.sf-input{flex:1 1 260px;min-width:0;padding:7px 10px;font-size:13px;color:var(--dsw-alias-label-primary);background:transparent;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;font-family:inherit}\n.sf-input:focus{outline:none;border-color:var(--dsw-alias-state-business-primary);box-shadow:0 0 0 var(--dsw-focus-ring-width) var(--dsw-focus-ring-color)}\n.sf-btn{appearance:none;border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;font-family:inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}\n.sf-btn:hover:not(:disabled){border-color:var(--dsw-alias-state-business-primary);color:var(--dsw-alias-state-business-primary)}\n.sf-btn:disabled{opacity:.5;cursor:default}\n.sf-btn-primary{border-color:var(--dsw-alias-state-business-primary);color:var(--dsw-alias-state-business-primary)}\n.sf-list{display:flex;flex-direction:column;gap:8px}\n.sf-skill{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}\n.sf-skill-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}\n.sf-name{font-size:13px;font-weight:600;color:var(--dsw-alias-label-primary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}\n.sf-dialect{font-size:11px;color:var(--dsw-alias-label-tertiary);border:1px solid var(--dsw-alias-border-l2);border-radius:999px;padding:1px 8px;white-space:nowrap}\n.sf-desc{font-size:12px;line-height:1.55;color:var(--dsw-alias-label-tertiary)}\n.sf-path{font-size:11px;color:var(--dsw-alias-label-tertiary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}\n.sf-warn{font-size:11px;color:var(--dsw-alias-state-warn-primary,var(--dsw-alias-label-secondary))}\n.sf-empty{font-size:12px;color:var(--dsw-alias-label-tertiary);padding:14px 0;text-align:center}\n.sf-error{font-size:12px;line-height:1.5;color:var(--dsw-alias-state-error-primary,#d33);word-break:break-word}\n.sf-notice{font-size:12px;line-height:1.5;color:var(--dsw-alias-state-business-primary)}\n.sf-hint{font-size:11px;line-height:1.5;color:var(--dsw-alias-label-tertiary)}\n.sf-spacer{flex:1}\n.sf-listitem{font-size:12px;color:var(--dsw-alias-label-secondary)}\n.sf-page{width:100%;min-width:0;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-base);font-size:14px;line-height:1.6;display:flex;overflow:hidden}\n.sf-pageScroll{scrollbar-gutter:stable;flex:1;min-height:0;overflow:auto}\n.sf-pageContent{max-width:960px;margin:0 auto;padding:0 clamp(24px,4vw,48px) 48px}\n@media (width<=767px){.sf-pageContent{padding-inline:20px}}\n.sf-page .sf-section{max-width:none;padding-top:28px}\n[data-platform=darwin] .sf-page .sf-section{padding-top:calc(28px + var(--dsh-frame-top-clearance,0px))}";
     var tagId = "dsh-skill-forge/SkillsPage.module.css";
     if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
       var tag = document.createElement("style");
@@ -43,6 +43,19 @@ window.__ModuleLoader__.load({
 
     var NS = "dsh-skill-forge";
     var BRIDGE_PATH = "api/dsh-skill-forge";
+
+    /**
+     * The id shared by the sidebar entry and the main panel it opens.
+     *
+     * The sidebar renders one row per 'sidebar.panellist' registration and calls
+     * layout.selectPanel(id) on click; the frame then renders the 'main' entry
+     * whose key equals that id. Registering both under one id is the whole
+     * wiring - there is no navigation API to call.
+     */
+    var PANEL_ID = "skill-forge";
+
+    /** Sidebar row position: after the Plugins row (0) and the schedule row (10). */
+    var PANEL_ORDER = 20;
 
     var en = {
           "nav": "Skills",
@@ -138,6 +151,53 @@ window.__ModuleLoader__.load({
     /** Turn an unknown throwable into a message for the page. */
     function messageOf(cause) {
       return String(cause && cause.message ? cause.message : cause);
+    }
+
+    /**
+     * The sidebar row glyph. The shell paints the row button, its label, tooltip
+     * and active state; a 'sidebar.panellist' registrant contributes only the
+     * icon, so this is drawn inline rather than imported - the bundle may require
+     * nothing but React (test/ui.test.js enforces that).
+     */
+    function SkillsPanelIcon(props) {
+      var size = props.size || 16;
+      return el(
+        "svg",
+        {
+          width: size,
+          height: size,
+          viewBox: "0 0 16 16",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: 1.3,
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          "aria-hidden": "true",
+        },
+        el("path", { key: "shaft", d: "M3.4 12.6 9.8 6.2" }),
+        el("path", { key: "head", d: "M10.8 3.2l2 2-1.4 1.4-2-2z" }),
+        el("path", { key: "spark", d: "M12.9 8.2v2.4" }),
+        el("path", { key: "spark2", d: "M11.7 9.4h2.4" }),
+      );
+    }
+
+    /**
+     * The standalone page the sidebar row opens.
+     *
+     * A 'main' entry owns the whole centre column, so it brings its own scroll
+     * container and content column - the shell paints no chrome around it. The
+     * settings section it shares state with renders inside this width.
+     */
+    function SkillsPanel(props) {
+      return el(
+        "div",
+        { className: "sf-page" },
+        el(
+          "div",
+          { className: "sf-pageScroll" },
+          el("div", { className: "sf-pageContent" }, el(SkillsSection, props)),
+        ),
+      );
     }
 
     function SkillCard(props) {
@@ -400,6 +460,28 @@ window.__ModuleLoader__.load({
             locale: NS,
           },
           SkillsSection,
+        );
+      });
+      ctx.slots.inject("main", function () {
+        return ctx.slots.register(
+          {
+            name: "main",
+            key: PANEL_ID,
+            locale: NS,
+          },
+          SkillsPanel,
+        );
+      });
+      ctx.slots.inject("sidebar.panellist", function () {
+        return ctx.slots.register(
+          {
+            name: "sidebar.panellist",
+            id: PANEL_ID,
+            order: PANEL_ORDER,
+            label: function () { return t("nav"); },
+            locale: NS,
+          },
+          SkillsPanelIcon,
         );
       });
     }
