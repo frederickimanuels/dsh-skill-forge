@@ -57,6 +57,25 @@ test('scan lists the skills a directory would contribute', async () => {
   }
 });
 
+test('scan carries the invocation flags the real catalog uses', async () => {
+  const { root, cleanup } = await fixture({
+    'skills/alpha/SKILL.md': SKILL('alpha', 'First skill.'),
+    'AGENTS.md': '# Project\n\nRun the tests.\n',
+  });
+  try {
+    const result = await run(['scan', root, '--json']);
+    assert.equal(result.code, 0);
+    const byName = Object.fromEntries(JSON.parse(result.stdout).map((row) => [row.name, row]));
+    // The preview has to agree with the catalog: a skill is model-invocable,
+    // repository instructions are not. Hand-building the row dropped these.
+    assert.equal(byName.alpha.modelInvocable, true);
+    assert.equal(byName.agents.modelInvocable, false);
+    assert.equal(byName.agents.userInvocable, true);
+  } finally {
+    await cleanup();
+  }
+});
+
 test('scan --json is machine readable', async () => {
   const { root, cleanup } = await fixture({ 'skills/alpha/SKILL.md': SKILL('alpha', 'First skill.') });
   try {

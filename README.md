@@ -167,6 +167,12 @@ package's `bin` field). From a checkout without a global install, use
 `references/` and `scripts/` keep working. It never overwrites without `--force`, and
 `--dry-run` shows the plan first.
 
+`scan` and `list` describe the same corpus and therefore agree line for line,
+including the `model`/`user-only` column — that column is read from the adapted
+skill, not guessed from the dialect. Both stop at a skill budget (2000 by default):
+`scan` says so on stderr, and `import` refuses a source larger than the budget
+rather than copying a prefix that would look complete.
+
 ```bash
 dsh-skill-forge import https://github.com/benjitaylor/skills.git
 ```

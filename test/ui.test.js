@@ -80,6 +80,24 @@ test('a git-free source is previewed without touching the store', async () => {
   }
 });
 
+test('an import larger than the budget copies nothing instead of a prefix', async () => {
+  const source = await fixture(SOURCE);
+  const store = await fixture({});
+  try {
+    const error = await importSkills({ source: source.root, store: store.root, cwd: store.root, depth: 4, maxFiles: 1 }).then(
+      () => undefined,
+      (thrown) => thrown,
+    );
+    assert.ok(error instanceof Error, 'a truncated import must fail loudly');
+    assert.match(error.message, /more skills than the 1 skill budget/);
+    assert.match(error.message, /Raise maxFiles/);
+    assert.equal((await listStore({ store: store.root })).skills.length, 0, 'a refused import writes nothing');
+  } finally {
+    await source.cleanup();
+    await store.cleanup();
+  }
+});
+
 test('importing copies a whole bundle and its resources', async () => {
   const source = await fixture(SOURCE);
   const store = await fixture({});

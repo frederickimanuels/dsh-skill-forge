@@ -173,21 +173,26 @@ export async function materialize(source, cwd) {
 /**
  * Work out what importing a source would copy, without touching the store.
  * @param {{ source: string, cwd?: string, loose?: boolean, depth?: number }} options - preview options.
- * @returns {Promise<{ source: string, dir: string, skills: Array<Record<string, unknown>>, cleanup: () => Promise<void> }>} the plan.
+ * @returns {Promise<{ source: string, dir: string, skills: Array<Record<string, unknown>>, truncated: boolean, maxFiles: number, cleanup: () => Promise<void> }>} the plan.
  */
 export async function previewImport(options) {
   const cwd = options.cwd ?? process.cwd();
   if (typeof options.source !== 'string' || options.source.trim().length === 0) throw new Error('import needs a source: a directory, a file, or a git URL');
   const { dir, cleanup } = await materialize(options.source.trim(), cwd);
   try {
+    // An import that hits a budget would copy a prefix of the source and call it
+    // done - the worst possible failure, because the result looks complete. The
+    // default matches the plugin's own, and truncated is reported to the caller.
+    const maxFiles = Number.isFinite(options.maxFiles) ? Math.max(1, Math.floor(options.maxFiles)) : 2000;
     const discovery = await discoverSkills({
       roots: [dir],
       cwd,
       depth: Number.isFinite(options.depth) ? options.depth : 4,
       includeLoose: options.loose === true,
+      maxFiles,
     });
     const skills = publishableRows(discovery.skills).map(describeRow);
-    return { source: options.source.trim(), dir, skills, cleanup };
+    return { source: options.source.trim(), dir, skills, truncated: discovery.truncated === true, maxFiles, cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -211,6 +216,14 @@ export async function importSkills(options) {
   try {
     const planned = preview.skills.map((skill) => skill.name);
     const dialects = Object.fromEntries(preview.skills.map((skill) => [skill.name, skill.dialect]));
+    // A truncated preview means the source is larger than the budget. Copying the
+    // prefix would leave a store that looks imported but is missing skills, so
+    // stop and let the caller raise maxFiles.
+    if (preview.truncated === true) {
+      throw new Error(
+        'source holds more skills than the ' + preview.maxFiles + ' skill budget: nothing was copied. Raise maxFiles to import all of them.',
+      );
+    }
     if (options.dryRun === true || preview.skills.length === 0) {
       return { store, source: preview.source, imported: [], skipped: [], planned, dialects };
     }

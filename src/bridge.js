@@ -166,7 +166,7 @@ export function createBridgeRoutes(options) {
           depth: Number.isFinite(body.depth) ? Number(body.depth) : 4,
         });
         try {
-          return { source: preview.source, dir: preview.dir, skills: preview.skills };
+          return { source: preview.source, dir: preview.dir, skills: preview.skills, truncated: preview.truncated, maxFiles: preview.maxFiles };
         } finally {
           await preview.cleanup();
         }

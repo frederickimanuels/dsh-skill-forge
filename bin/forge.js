@@ -24,6 +24,7 @@ import { discoverSkills, resolveRoot } from '../src/discover.js';
 import { DIALECT_RANK } from '../src/adapt.js';
 import {
   DEFAULT_STORE,
+  describeRow,
   dialectLabel,
   importSkills,
   listStore,
@@ -31,6 +32,16 @@ import {
   publishableRows,
   removeSkill,
 } from '../src/store.js';
+
+/**
+ * Budget for `scan` and `list`.
+ *
+ * These are management views of a corpus, not the per-request catalog, so they
+ * ask for the same headroom the plugin's own default gives. Without this, scan
+ * fell back to discoverSkills' 500 and reported a store of 502 as 500 skills
+ * while `list` showed all of them.
+ */
+const CLI_MAX_FILES = 2000;
 
 const USAGE = `dsh-skill-forge - import skills written for other agents into DeepSeek Harness
 
@@ -113,16 +124,9 @@ async function commandScan(targets, flags) {
     cwd,
     depth: flags.depth === undefined ? 3 : Number(flags.depth),
     includeLoose: flags.loose === true,
+    maxFiles: CLI_MAX_FILES,
   });
-  const rows = publishableRows(discovery.skills).map((row) => ({
-    name: row.definition.name,
-    description: row.definition.description,
-    dialect: row.definition.metadata.dialect,
-    dialectLabel: dialectLabel(row.definition.metadata.dialect),
-    source: row.definition.source,
-    file: row.record.file,
-    rank: row.definition.rank,
-  }));
+  const rows = publishableRows(discovery.skills).map(describeRow);
   if (flags.json === true) {
     console.log(JSON.stringify(rows, null, 2));
     return;
@@ -130,6 +134,9 @@ async function commandScan(targets, flags) {
   printTable(rows);
   for (const root of discovery.roots) {
     if (root.error !== undefined) console.error('warning: ' + root.error);
+  }
+  if (discovery.truncated === true) {
+    console.error('warning: the scan stopped at ' + CLI_MAX_FILES + ' skills; the list above is incomplete.');
   }
 }
 
