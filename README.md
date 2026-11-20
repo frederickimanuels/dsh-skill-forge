@@ -309,6 +309,13 @@ npm publish --access public        # scoped, so --access public is required
 git tag v0.1.0 && git push origin master --tags
 ```
 
+If `npm config get registry` points at a mirror, pass the public registry
+explicitly or the upload lands somewhere users cannot install from:
+
+```bash
+npm publish --access public --registry=https://registry.npmjs.org
+```
+
 Users then install with `dsh plugin --profile web add @frederickimanuels/dsh-skill-forge`.
 
 **Discovery.** Three things get a plugin into the catalog, and the first one is the
