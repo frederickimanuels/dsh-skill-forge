@@ -1,0 +1,77 @@
+{
+  "name": "@frederickimanuels/dsh-skill-forge",
+  "version": "0.1.0",
+  "description": "Import AI skills written for other agents (Claude Code, Cursor, Codex, plain Markdown) into DeepSeek Harness, and publish them as native DSH skills.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./client/index.js",
+    "./store": "./src/store.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "dsh-skill-forge": "bin/forge.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "client",
+    "dsh",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./dsh/cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    },
+    "engines": {
+      "dsh": ">=0.2.1-rc.2 <0.4.0-0"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-skill": ">=0.0.1-rc.1",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-skill": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "skills",
+    "agent-skills",
+    "claude-code",
+    "cursor",
+    "codex"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frederickimanuels/dsh-skill-forge.git"
+  },
+  "homepage": "https://github.com/frederickimanuels/dsh-skill-forge#readme",
+  "bugs": {
+    "url": "https://github.com/frederickimanuels/dsh-skill-forge/issues"
+  },
+  "author": "frederickimanuels",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "scan": "node bin/forge.js scan",
+    "doctor": "node bin/forge.js doctor"
+  },
+  "license": "MIT"
+}

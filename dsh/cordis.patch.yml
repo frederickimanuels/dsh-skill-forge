@@ -1,0 +1,25 @@
+# The layer this bundle contributes to a dsh profile that lists it.
+#
+# One row: a skill provider that republishes skills written for other agents
+# (Claude Code, Cursor, Codex, plain Markdown) on `ctx.skills`. The row
+# references the package by NAME (not a relative path) so Node resolution finds
+# the installed copy — see
+# https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.md
+#
+# Everything is configured through `config`. The defaults publish
+# `~/.dsh/skill-forge` plus whatever Claude Code / Cursor / Codex files the
+# current project already has; see the README for the full list.
+#
+# Install skills with the CLI that ships with this package:
+#   npx @frederickimanuels/dsh-skill-forge import <path-or-git-url>
+#   npx @frederickimanuels/dsh-skill-forge scan .
+#
+# To import loose Markdown (no frontmatter) turn that on explicitly:
+#   - id: skill-forge
+#     name: '@frederickimanuels/dsh-skill-forge'
+#     config:
+#       includeLoose: true
+
+- insert:
+    - id: skill-forge
+      name: '@frederickimanuels/dsh-skill-forge'

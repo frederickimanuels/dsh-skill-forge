@@ -1,0 +1,13 @@
+# Installed dependencies. The plugin has no runtime dependencies and resolves
+# the harness packages through the host, so this directory is never committed.
+node_modules/
+
+# The demo corpus quoted in the README ("The first example: benjitaylor/skills").
+# It is a full clone of a third-party repository, kept locally for the walkthrough;
+# clone it with the command the README shows instead of vendoring it here.
+fixtures/
+
+# Packed artifacts and local scratch.
+*.tgz
+*.log
+.DS_Store
