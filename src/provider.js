@@ -244,6 +244,12 @@ export function createSkillForgeProvider(options) {
     for (const root of discovered.roots) {
       if (root.error !== undefined) warn(root.error);
     }
+    if (discovered.truncated === true) {
+      // Say it out loud: the registry also treats the scan as incomplete, so it
+      // never caches and rescans every step. An operator seeing both symptoms
+      // should raise maxFiles rather than hunt for a phantom filesystem bug.
+      warn(`discovery stopped at maxFiles (${config.maxFiles ?? 2000}): some skills below ` + roots.join(', ') + ' were not imported. Raise maxFiles to publish all of them.');
+    }
     caches.set(cwd, { skills, truncated: discovered.truncated, roots: discovered.roots });
     return { candidates: skills.map((skill) => skill.definition), complete: !discovered.truncated };
   };

@@ -35,7 +35,7 @@ export const Config = z.object({
   autoDiscover: z.boolean().default(true).description('Also scan the project-local conventions (.claude/skills, .agents/skills, .cursor/rules, AGENTS.md, CLAUDE.md, and friends) from the agent working directory.'),
   includeLoose: z.boolean().default(false).description('Import Markdown files that have no frontmatter and belong to no known dialect. Off by default: a README next to a skill would otherwise become one.'),
   depth: z.number().default(3).description('Maximum directory depth below each root when looking for skills.'),
-  maxFiles: z.number().default(500).description('Maximum number of imported skills per working directory.'),
+  maxFiles: z.number().default(2000).description('Maximum number of imported skills per working directory. A corpus of a few hundred skills is ordinary, so the default leaves headroom; the plugin warns when the budget is exhausted instead of dropping skills silently.'),
   exclude: z.array(z.string()).default([]).description('Extra directory names to skip during discovery, on top of the built-in list (node_modules, .git, dist, ...).'),
   deny: z.array(z.string()).default([]).description('Imported skill names to drop from the catalog, after name normalization.'),
   rankBoost: z.number().default(0).description('Added to each dialect default rank. Lower ranks win when two providers publish the same name; use a negative value to prefer forged skills.'),

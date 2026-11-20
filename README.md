@@ -105,7 +105,7 @@ All keys are optional; the defaults are what most people want.
     autoDiscover: true             # also read .claude/, .cursor/, AGENTS.md … per project
     includeLoose: false            # import Markdown with no frontmatter
     depth: 3                       # directory depth per root
-    maxFiles: 500                  # per-root file budget
+    maxFiles: 2000                 # total file budget; warns when exhausted
     exclude: []                    # extra directory names to skip (additive)
     deny: []                       # skill names to refuse
     rankBoost: 0                   # add to every rank; negative outranks host skills

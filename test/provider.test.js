@@ -180,6 +180,24 @@ test('a missing root is reported as a warning, not a failure', async () => {
   }
 });
 
+test('an exhausted file budget warns instead of dropping skills silently', async () => {
+  const log = [];
+  const { root, cleanup } = await fixture({
+    'skills/alpha/SKILL.md': SKILL('alpha', 'First skill.'),
+    'skills/beta/SKILL.md': SKILL('beta', 'Second skill.'),
+  });
+  const provider = makeProvider(root, { roots: [path.join(root, 'skills')], maxFiles: 1 }, log);
+  try {
+    const { candidates, complete } = await provider.list({ cwd: root });
+    assert.equal(candidates.length, 1);
+    assert.equal(complete, false, 'a truncated scan must not look complete to the registry');
+    assert.match(log.join(' '), /discovery stopped at maxFiles \(1\)/);
+  } finally {
+    provider.dispose();
+    await cleanup();
+  }
+});
+
 test('an aborted signal stops a scan', async () => {
   const { root, cleanup } = await fixture({ 'skills/alpha/SKILL.md': SKILL('alpha', 'First skill.') });
   const provider = makeProvider(root, { roots: [path.join(root, 'skills')] });
