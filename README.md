@@ -311,11 +311,21 @@ git tag v0.1.0 && git push origin master --tags
 
 Users then install with `dsh plugin --profile web add @frederickimanuels/dsh-skill-forge`.
 
-**Discovery.** Add the `dsh-plugin` GitHub topic: the community hub
-([dsh-plugin.org](https://dsh-plugin.org)) indexes repositories carrying it and
-refreshes its catalog daily, so no submission form is strictly required. Listing on
-npm is what makes the plugin one-click installable from the in-app **Settings →
-Plugin Hub** page; a repo alone is only installable by git URL.
+**Discovery.** Three things get a plugin into the catalog, and the first one is the
+only one that cannot be skipped:
+
+1. The repository carries the `dsh-plugin` GitHub topic. New repositories are found
+   by topic only.
+2. `repository` in `package.json` points at that same `owner/repo`. If it points
+   somewhere else the npm package cannot be bound to the entry and the plugin stays
+   GitHub-install-only.
+3. The package is published to npm. The **in-app** Settings → Plugin Hub market
+   only lists one-step npm installs, so a git-only plugin is indexed on
+   [dsh-plugin.org](https://dsh-plugin.org) but never appears inside DSH.
+
+The catalog is rebuilt daily from the topic, and
+[an issue on the hub repo](https://github.com/dshplugin/dsh-plugin-hub/issues/new)
+with the *Plugin submission* template gets a human to look at a new entry sooner.
 
 ## Developing
 
