@@ -6,8 +6,8 @@ Import AI skills written for *other* agents into [DeepSeek Harness](https://gith
 and publish them as native DSH skills.
 
 [![DSH plugin](https://img.shields.io/badge/DSH-plugin-0e7490.svg?style=flat-square)](https://github.com/topics/dsh-plugin)
-[![npm](https://img.shields.io/npm/v/@frederickimanuels/dsh-skill-forge.svg?style=flat-square)](https://www.npmjs.com/package/@frederickimanuels/dsh-skill-forge)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-126%20passing-brightgreen.svg?style=flat-square)](#tests)
 
 <br clear="left">
 
@@ -33,13 +33,17 @@ stageshow  Agent Skills bundle      model      agent-skills:stageshow/SKILL.md
 
 ## Install
 
-From this repository (works today):
+```bash
+dsh plugin --profile web add @frederickimanuels/dsh-skill-forge
+```
+
+Until the package is published, the same command works against the repository:
 
 ```bash
 dsh plugin --profile web add "git+https://github.com/frederickimanuels/dsh-skill-forge.git"
 ```
 
-From a local checkout, while you are iterating on it:
+or from a local checkout, while you are iterating on it:
 
 ```bash
 dsh plugin --profile web add "file:$PWD"
@@ -273,6 +277,22 @@ shows up without restarting the host. A root that does not exist yet is watched
 through its nearest existing ancestor and upgraded to a recursive watcher the moment
 it appears — which is what makes the normal first-run sequence (start the host, then
 import skills) work without a restart.
+
+## Permissions and trust
+
+- **No network access.** The plugin never calls out. `import` runs `git clone` and
+  `cp` against the source you name; nothing else leaves the machine.
+- **No skill scripts are executed.** Importing copies files into the store. A skill's
+  `scripts/` directory is published as a resource, and the model only runs something
+  from it if you ask it to.
+- **Local HTTP routes.** With `ui: true` the host half serves five JSON routes under
+  `/api/dsh-skill-forge` (`state`, `preview`, `import`, `remove`, `store`) on the same
+  origin as the DSH web server, behind the same authentication. A request from another
+  origin is refused. Set `ui: false` to register no routes at all.
+- **Writes only inside the store.** The default store is `~/.dsh/skill-forge`.
+  `remove` deletes a directory below it; nothing outside it is touched.
+- **No runtime dependencies.** No transitive supply chain: only the harness packages
+  and Node built-ins are imported.
 
 ## Publishing
 
