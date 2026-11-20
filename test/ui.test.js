@@ -268,6 +268,17 @@ test('the package declares a browser half the harness can load', async () => {
   // column and the shell paints no scroll chrome around it.
   assert.match(bundle, /className: "sf-page"/);
   assert.match(bundle, /className: "sf-pageScroll"/);
+  // Nothing above the page scrolls — the layout shell clips overflow on purpose —
+  // so the page must (a) be a column that flexes to the frame's height without
+  // growing to its content, and (b) be the only box with overflow. A page whose
+  // height collapses to 'auto' renders a scroller that never overflows, which is
+  // exactly the 'the page will not scroll' report this design answers.
+  assert.match(bundle, /\.sf-page\{box-sizing:border-box;height:100%;max-height:100%;min-height:0;min-width:0;flex:1 1 auto/);
+  assert.match(bundle, /\.sf-page\{.*?overflow:hidden/);
+  assert.match(bundle, /\.sf-pageScroll\{flex:1 1 0;min-height:0;overflow-y:auto/);
+  // The stylesheet is upserted, not inserted once: a reloaded client must replace
+  // the rules an earlier bundle left in the tab instead of silently keeping them.
+  assert.match(bundle, /if \(tag\.textContent !== css\) tag\.textContent = css;/);
   // Only the modules the harness seeds are required: anything else would have
   // to be declared in dsh.client.external, and nothing is.
   const required = [...bundle.matchAll(/require\("([^"]+)"\)/g)].map((match) => match[1]);
