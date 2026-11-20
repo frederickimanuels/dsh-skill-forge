@@ -5,6 +5,7 @@
 Import AI skills written for *other* agents into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)
 and publish them as native DSH skills.
 
+[![npm](https://img.shields.io/npm/v/@frederickimanuels/dsh-skill-forge?style=flat-square&label=npm&color=cb3837)](https://www.npmjs.com/package/@frederickimanuels/dsh-skill-forge)
 [![DSH plugin](https://img.shields.io/badge/DSH-plugin-0e7490.svg?style=flat-square)](https://github.com/topics/dsh-plugin)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 [![tests](https://img.shields.io/badge/tests-126%20passing-brightgreen.svg?style=flat-square)](#tests)
