@@ -133,11 +133,20 @@ through `600` (bundled skills). Forged skills start at `620`, so importing a
 With the web profile there is a **Skills** entry in the sidebar — and the same panel
 at **Settings → Skills** — that does what the CLI does without a terminal:
 
-- lists every skill in the store with its dialect, whether the model may invoke it,
-  and the file it came from;
+- lists every skill in the store as a dense row: name, dialect, whether the model
+  may invoke it, and a two-line description — a few hundred skills stay scannable;
+- filters that list by name or description and by invocation (all / model / user-only),
+  with a live `shown of total` count;
 - imports a local path or a git URL, with a **Preview** button that shows what the
   source would contribute before anything is copied;
-- removes a skill, after a second click to confirm.
+- removes a skill from the row itself — the remove glyph appears on hover or focus,
+  then asks for a second click before anything is deleted.
+
+The page owns its scroll container: `.sf-page` is a `flex: 1 1 auto` column with
+`min-height: 0` and `.sf-pageScroll` below it is the only `overflow: auto` box. Nothing
+above it in the frame scrolls — the layout shell clips overflow on purpose — so a page
+that forgets a scroller is simply cut off at the viewport. Keep those two rules if you
+restyle it.
 
 The sidebar entry and the settings section are two registrations over one component,
 so they never disagree about what is in the store. A destination in the DSH sidebar
