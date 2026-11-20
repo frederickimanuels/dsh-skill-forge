@@ -1,10 +1,15 @@
+<img src="docs/icon.svg" width="72" height="72" align="left" alt="Skill Forge">
+
 # dsh-skill-forge
 
 Import AI skills written for *other* agents into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)
 and publish them as native DSH skills.
 
-Published as **[`@frederickimanuels/dsh-skill-forge`](https://www.npmjs.com/package/@frederickimanuels/dsh-skill-forge)**.
-The CLI binary stays `dsh-skill-forge`.
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-0e7490.svg?style=flat-square)](https://github.com/topics/dsh-plugin)
+[![npm](https://img.shields.io/npm/v/@frederickimanuels/dsh-skill-forge.svg?style=flat-square)](https://www.npmjs.com/package/@frederickimanuels/dsh-skill-forge)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+
+<br clear="left">
 
 Every agent ecosystem invented its own skill format. Claude Code has `SKILL.md` plus
 slash commands. Cursor has `.cursor/rules/*.mdc`. Codex has `AGENTS.md`. Half the
@@ -24,19 +29,24 @@ stageshow  Agent Skills bundle      model      agent-skills:stageshow/SKILL.md
 2 skills would be published.
 ```
 
+<img src="docs/skills-page.png" alt="The Skills page: import card, filter chips, and a dense list of 502 forged skills" width="820">
+
 ## Install
 
-From the registry:
+From this repository (works today):
 
 ```bash
-dsh plugin --profile web add @frederickimanuels/dsh-skill-forge
+dsh plugin --profile web add "git+https://github.com/frederickimanuels/dsh-skill-forge.git"
 ```
 
-From a checkout, while the package is unpublished or while you are iterating on it:
+From a local checkout, while you are iterating on it:
 
 ```bash
 dsh plugin --profile web add "file:$PWD"
 ```
+
+The package has no build step — the published files are the source — so a git install
+needs no `prepare` script and no pnpm build allowance.
 
 Either way the profile stores the package under its scoped name, so the bundle row
 in your composed config reads `@frederickimanuels/dsh-skill-forge`.
@@ -46,6 +56,26 @@ Verify the layer resolved:
 ```bash
 dsh --profile web --dump-config | grep -A2 skill-forge
 ```
+
+Then restart the web host once so it loads the new bundle, and open **Skills** in the
+sidebar.
+
+### Compatibility
+
+`engines.dsh` declares the harness releases this bundle supports, and the harness
+reads it before it imports a line of plugin code:
+
+```json
+"engines": { "node": ">=20", "dsh": ">=0.2.1-rc.2 <0.4.0-0" }
+```
+
+Installation and profile startup refuse a bundle whose range the running DSH does not
+satisfy. The range must sit at the **root** `engines` object — a nested
+`dsh.engines` block is read by nothing, and the check silently falls back to the
+`@deepseek-ai/dsh*` peer ranges instead.
+
+The sidebar icon comes from `package.json` `icon`, which the loader resolves as a
+relative path inside the package (SVG, PNG, JPEG or WebP, at most 256 KiB).
 
 ## What it understands
 
@@ -244,6 +274,29 @@ through its nearest existing ancestor and upgraded to a recursive watcher the mo
 it appears — which is what makes the normal first-run sequence (start the host, then
 import skills) work without a restart.
 
+## Publishing
+
+This package is an npm-installable DSH **bundle**: `package.json` declares
+`dsh.bundle.patch` and the patch file names the plugin rows a profile composes.
+That is what `dsh plugin add` installs and what the Plugin Hub indexes.
+
+To cut a release:
+
+```bash
+npm pack --dry-run                 # what ships: 20 files, no build output needed
+npm login                          # if you are not authenticated yet
+npm publish --access public        # scoped, so --access public is required
+git tag v0.1.0 && git push origin master --tags
+```
+
+Users then install with `dsh plugin --profile web add @frederickimanuels/dsh-skill-forge`.
+
+**Discovery.** Add the `dsh-plugin` GitHub topic: the community hub
+([dsh-plugin.org](https://dsh-plugin.org)) indexes repositories carrying it and
+refreshes its catalog daily, so no submission form is strictly required. Listing on
+npm is what makes the plugin one-click installable from the in-app **Settings →
+Plugin Hub** page; a repo alone is only installable by git URL.
+
 ## Developing
 
 `dsh plugin add "file:…"` installs a **pnpm snapshot**, not a symlink: edits to this
@@ -262,7 +315,7 @@ systemctl restart dsh-web                  # restart the host to load it
 npm test
 ```
 
-122 tests cover the frontmatter parser, dialect detection, discovery (symlink loops,
+126 tests cover the frontmatter parser, dialect detection, discovery (symlink loops,
 excludes, bundle non-descent, redirect files), adaptation, tool-grant rewriting, the
 provider's cache, rehydration and live-refresh watchers, the plugin mounted into a
 real `SkillRegistry`, the CLI, the shared store module, the settings bridge routes

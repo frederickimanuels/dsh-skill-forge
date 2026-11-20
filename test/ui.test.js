@@ -290,6 +290,39 @@ test('the package declares a browser half the harness can load', async () => {
   }
 });
 
+test('the manifest declares the dsh range and an icon where the loader reads them', async () => {
+  const manifest = JSON.parse(await readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+  // The boot reads engines.dsh at the manifest root and nowhere else, so a
+  // nested dsh.engines block is dead config: the install would then fall through
+  // to the peer ranges and gate on those instead.
+  assert.equal(typeof manifest.engines?.dsh, 'string', 'engines.dsh must sit at the manifest root');
+  assert.equal(manifest.dsh.engines, undefined, 'dsh.engines is not read by any part of the harness');
+  assert.match(manifest.engines.dsh, /^>=/);
+  // The loader resolves package.json.icon as a relative path inside the package,
+  // rejects anything that escapes the manifest directory, and caps it at 256 KiB.
+  assert.equal(typeof manifest.icon, 'string');
+  assert.ok(manifest.icon.startsWith('./') === false, 'icon must be a bare relative path such as icon.svg');
+  assert.ok(manifest.icon.includes('://') === false && path.isAbsolute(manifest.icon) === false);
+  const iconPath = path.join(PACKAGE_ROOT, manifest.icon);
+  const icon = await readFile(iconPath, 'utf8');
+  assert.ok(Buffer.byteLength(icon) <= 256 * 1024, 'the icon exceeds the 256 KiB the loader accepts');
+  assert.match(icon, /^<svg[\s>]/);
+  // The catalog icon must be the glyph the sidebar row draws, or the same plugin
+  // appears under two different marks. Compare only inside SkillsPanelIcon: the
+  // bundle also draws a removal cross, which has no business in the package icon.
+  const bundle = await readFile(path.join(PACKAGE_ROOT, 'client', 'index.js'), 'utf8');
+  const glyphStart = bundle.indexOf('function SkillsPanelIcon');
+  assert.ok(glyphStart !== -1, 'the sidebar glyph is gone');
+  const glyph = bundle.slice(glyphStart, bundle.indexOf('\n    }', glyphStart));
+  const glyphPaths = [...glyph.matchAll(/d: "([^"]+)"/g)].map((match) => match[1]);
+  assert.ok(glyphPaths.length > 0, 'the sidebar glyph draws no path');
+  for (const d of glyphPaths) {
+    assert.ok(icon.includes('d="' + d + '"'), 'the icon omits a path the sidebar glyph draws: ' + d);
+  }
+  // npm only ships what files[] lists, so an unpacked icon is an invisible one.
+  assert.ok(manifest.files.includes(manifest.icon), 'files[] must pack the icon');
+});
+
 test('the plugin registers the bridge only when it has a web server', async () => {
   const store = await fixture({});
   try {

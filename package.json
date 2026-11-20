@@ -18,6 +18,8 @@
     "bin",
     "client",
     "dsh",
+    "docs",
+    "icon.svg",
     "README.md",
     "LICENSE"
   ],
@@ -27,13 +29,12 @@
     },
     "client": {
       "platform": "web"
-    },
-    "engines": {
-      "dsh": ">=0.2.1-rc.2 <0.4.0-0"
     }
   },
+  "icon": "icon.svg",
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.2 <0.4.0-0"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-skill": ">=0.0.1-rc.1",
