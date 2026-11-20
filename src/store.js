@@ -111,28 +111,36 @@ export function describeRow(row) {
 
 /**
  * Read what the store currently holds.
- * @param {{ store?: string, cwd?: string, loose?: boolean, depth?: number }} options - read options.
- * @returns {Promise<{ store: string, exists: boolean, skills: Array<Record<string, unknown>>, truncated: boolean, errors: string[] }>} the store listing.
+ *
+ * A store can outgrow the discovery budget (a corpus of a few hundred skills
+ * does it), so the listing says so instead of quietly reporting a short count:
+ * `truncated` is true and `maxFiles` names the cap that was hit.
+ *
+ * @param {{ store?: string, cwd?: string, loose?: boolean, depth?: number, maxFiles?: number }} options - read options.
+ * @returns {Promise<{ store: string, exists: boolean, skills: Array<Record<string, unknown>>, truncated: boolean, maxFiles: number, errors: string[] }>} the store listing.
  */
 export async function listStore(options = {}) {
   const cwd = options.cwd ?? process.cwd();
   const store = storePath(options.store, cwd);
+  const maxFiles = Number.isFinite(options.maxFiles) ? Math.max(1, Math.floor(options.maxFiles)) : 2000;
   const exists = await stat(store).then(
     (info) => info.isDirectory(),
     () => false,
   );
-  if (exists === false) return { store, exists, skills: [], truncated: false, errors: [] };
+  if (exists === false) return { store, exists, skills: [], truncated: false, maxFiles, errors: [] };
   const discovery = await discoverSkills({
     roots: [store],
     cwd,
     depth: Number.isFinite(options.depth) ? options.depth : 3,
     includeLoose: options.loose === true,
+    maxFiles,
   });
   return {
     store,
     exists,
     skills: publishableRows(discovery.skills).map(describeRow),
     truncated: discovery.truncated === true,
+    maxFiles,
     errors: discovery.roots.filter((root) => root.error !== undefined).map((root) => String(root.error)),
   };
 }

@@ -26,6 +26,9 @@ export const BRIDGE_PREFIX = '/api/dsh-skill-forge';
 /** Largest JSON body we accept, in bytes. */
 const MAX_BODY_BYTES = 64 * 1024;
 
+/** How many skills one `state` answer may carry, well above the catalog budget. */
+const LISTING_MAX_FILES = 5000;
+
 /**
  * Write one JSON response.
  * @param {import('node:http').ServerResponse} res - response.
@@ -102,12 +105,21 @@ export function createBridgeRoutes(options) {
 
   /** Answer shape shared by `state` and the mutating routes. */
   const describeState = async (cwd) => {
-    const listing = await listStore({ store, cwd, loose: config.includeLoose === true });
+    // The page is a management view, so it asks for a far larger budget than
+    // the catalog needs: an operator who imported a few hundred skills should
+    // still see all of them. When even that runs out, `truncated` says so.
+    const listing = await listStore({
+      store,
+      cwd,
+      loose: config.includeLoose === true,
+      maxFiles: LISTING_MAX_FILES,
+    });
     return {
       store: listing.store,
       defaultStore,
       exists: listing.exists,
       truncated: listing.truncated,
+      maxFiles: listing.maxFiles,
       errors: listing.errors,
       skills: listing.skills,
       settings: {
@@ -115,6 +127,7 @@ export function createBridgeRoutes(options) {
         autoDiscover: config.autoDiscover !== false,
         includeLoose: config.includeLoose === true,
         depth: Number.isFinite(config.depth) ? config.depth : 3,
+        maxFiles: listing.maxFiles,
         watch: config.watch !== false,
       },
     };
